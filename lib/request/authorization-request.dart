@@ -22,7 +22,7 @@ class AuthorizationRequest extends CommonRequestDetails
       bool fullScreen: true,
       bool clearCookies: false}) {
 
-    this.url = config.authorizationUrl;
+
     this.redirectUrl = config.redirectUri;
     this.parameters = {
       "client_id": config.clientId,

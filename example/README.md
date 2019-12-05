@@ -1,6 +1,6 @@
-# identity_server_example
+# example
 
-Demonstrates how to use the identity_server plugin.
+A new Flutter application.
 
 ## Getting Started
 

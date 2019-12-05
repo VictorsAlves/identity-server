@@ -10,6 +10,7 @@ class Config {
   String tokenUrl;
   final String clientId;
   final String clientSecret;
+  String redirectUrl;
   String redirectUri;
   String redirectUriEncoded;
   final String responseType;
@@ -23,7 +24,7 @@ class Config {
 
   Rect screenSize;
 
-  Config(this.clientId, this.scope, this.redirectUri,
+  Config(this.clientId, this.scope, this.redirectUrl,
       {this.clientSecret,
         this.redirectUriEncoded,
         this.code,
@@ -32,9 +33,10 @@ class Config {
         this.resource,
         this.responseType = "code",
         this.contentType = "application/x-www-form-urlencoded",
-        this.screenSize}) {
-    this.authorizationUrl = clientConfig.authorizationEndpoint;
-    this.tokenUrl = clientConfig.tokenEndpoint;
+        this.authorizationUrl,
+        this.tokenUrl,
+      }) {
+
   }
 
   String createURL() {
