@@ -38,11 +38,11 @@ class RequestCode {
         "3D$autorizationCode%26code_challenge_method%3D$codeChallengeMethod";*/
     RequestUtils rs;
 
-
     String url = _config.createURL();
     String codeVerifier = _config.code;
 
-    await _webView.launch(url,clearCookies: _authorizationRequest.clearCookies,
+    await _webView.launch(url,
+        clearCookies: _authorizationRequest.clearCookies,
         hidden: false,
         rect: _config.screenSize);
 
@@ -74,7 +74,8 @@ class RequestCode {
 
   String _mapToQueryParams(Map<String, String> params) {
     final queryParams = <String>[];
-    params.forEach((String key, String value) => queryParams.add("$key=$value"));
+    params
+        .forEach((String key, String value) => queryParams.add("$key=$value"));
     return queryParams.join("&");
   }
 }
