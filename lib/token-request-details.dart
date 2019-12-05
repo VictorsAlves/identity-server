@@ -1,4 +1,4 @@
-import 'config.dart';
+import 'package:identity_server/model/config.dart';
 
 class TokenRequestDetails {
   String url;

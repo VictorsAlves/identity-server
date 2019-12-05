@@ -59,11 +59,6 @@ class FlutterAppAuth implements AadOAuth {
   }
 
   Future<AuthorizationResponse> authorize(AuthorizationRequest request) async {
-    var result = await _channel.invokeMethod('authorize', request.toMap());
-    return AuthorizationResponse(
-        result['authorizationCode'],
-        result['codeVerifier'],
-        result['authorizationAdditionalParameters']?.cast<String, dynamic>());
   }
 
   /// For exchanging tokens

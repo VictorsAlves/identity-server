@@ -1,4 +1,4 @@
-library aad_oauth;
+library identity_server;
 import 'package:identity_server/request/request-code.dart';
 import 'package:identity_server/request/request-token.dart';
 

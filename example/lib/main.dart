@@ -1,7 +1,6 @@
-import 'package:flutter/material.dart';
-import 'package:identity_server/model/config.dart';
 import 'package:identity_server/add-oauth.dart';
-import 'package:identity_server/identity_server.dart';
+import 'package:identity_server/model/config.dart';
+import 'package:flutter/material.dart';
 
 void main() => runApp(new MyApp());
 
@@ -11,15 +10,17 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+
+
   @override
   initState() {
     super.initState();
+
   }
 
   @override
   Widget build(BuildContext context) {
-    return new MaterialApp(
-      debugShowCheckedModeBanner: false,
+    return new MaterialApp(debugShowCheckedModeBanner: false,
       title: 'AAD OAuth Demo',
       theme: new ThemeData(
         primarySwatch: Colors.blue,
@@ -38,29 +39,19 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  static String clientId = 'ZPonto';
-  static List<String> scopes = [
-    'openid',
-    'profile',
-    'email',
-    'offline_access',
-    'moltres.acesso.api.full'
-  ];
+  static String  clientId = 'ZPonto';
+  static String scopes = 'openid profile offline_access';
   static String redirectUrl = 'net.openid.appzponto:/oauth2redirect';
 
-static  String connectUrl =
-      'https://identity-server-dev.zellar.com.br/connect/authorize';
 
-static  String connectToken = 'https://identity-server-dev.zellar.com.br/connect/token';
 
-  static final Config config = new Config(clientId, scopes, redirectUrl,authorizationUrl: connectUrl,tokenUrl:connectToken );
+  static final Config config = new Config(clientId,scopes, redirectUrl);
   final AadOAuth oauth = AadOAuth(config);
 
   Widget build(BuildContext context) {
     // adjust window size for browser login
     var screenSize = MediaQuery.of(context).size;
-    var rectSize =
-        Rect.fromLTWH(0.0, 25.0, screenSize.width, screenSize.height - 25);
+    var rectSize =  Rect.fromLTWH(0.0, 25.0, screenSize.width, screenSize.height - 25);
     oauth.setWebViewScreenSize(rectSize);
 
     return new Scaffold(
