@@ -21,13 +21,14 @@ class AuthorizationRequest extends CommonRequestDetails
       List<String> promptValues,
       bool fullScreen: true,
       bool clearCookies: false}) {
+
     this.url = config.authorizationUrl;
     this.redirectUrl = config.redirectUri;
     this.parameters = {
       "client_id": config.clientId,
       "response_type": config.responseType,
       "redirect_uri": config.redirectUri,
-      "scope": config.scope,
+      "scope": config.scope.join(" "),
     };
     this.fullScreen = fullScreen;
     this.clearCookies = clearCookies;

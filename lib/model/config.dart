@@ -3,6 +3,7 @@ import 'dart:math';
 
 
 import 'package:flutter/widgets.dart';
+import 'package:identity_server/authorization-service-configuration.dart';
 
 class Config {
   String authorizationUrl;
@@ -13,10 +14,12 @@ class Config {
   String redirectUriEncoded;
   final String responseType;
   final String contentType;
-  final String scope;
+  final List<String> scope;
   final String resource;
   final String loginUrl;
   String code;
+  AuthorizationServiceConfiguration clientConfig;
+
 
   Rect screenSize;
 
@@ -30,9 +33,8 @@ class Config {
         this.responseType = "code",
         this.contentType = "application/x-www-form-urlencoded",
         this.screenSize}) {
-    this.authorizationUrl =
-    "https://identity-server-dev.zellar.com.br/connect/authorize";
-    this.tokenUrl = "https://identity-server-dev.zellar.com.br/connect/token";
+    this.authorizationUrl = clientConfig.authorizationEndpoint;
+    this.tokenUrl = clientConfig.tokenEndpoint;
   }
 
   String createURL() {

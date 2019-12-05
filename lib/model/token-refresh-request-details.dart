@@ -10,7 +10,7 @@ class TokenRefreshRequestDetails {
     this.url = config.tokenUrl;
     this.params = {
       "client_id": config.clientId,
-      "scope": config.scope,
+      "scope": config.scope.join(" "),
       "redirect_uri": config.redirectUri,
       "grant_type": "refresh_token",
       "refresh_token": refreshToken
