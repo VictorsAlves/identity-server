@@ -5,6 +5,7 @@ import 'dart:math';
 import 'package:flutter/widgets.dart';
 
 class Config {
+
   String authorizationUrl;
   String tokenUrl;
   final String clientId;
@@ -16,31 +17,28 @@ class Config {
   final String scope;
   final String resource;
   final String loginUrl;
-  String code;
+  String codeVerifier;
 
   Rect screenSize;
 
   Config(this.clientId, this.scope, this.redirectUri,
       {this.clientSecret,
         this.redirectUriEncoded,
-        this.code,
-        this.loginUrl =
-        "https://identity-server-dev.zellar.com.br/Account/Login?ReturnUrl=",
+        this.codeVerifier,
+        this.loginUrl = "https://identity-server-dev.zellar.com.br/Account/Login?ReturnUrl=",
         this.resource,
         this.responseType = "code",
         this.contentType = "application/x-www-form-urlencoded",
         this.screenSize}) {
-    this.authorizationUrl =
-    "https://identity-server-dev.zellar.com.br/connect/authorize";
+    this.authorizationUrl = "https://identity-server-dev.zellar.com.br/connect/authorize";
     this.tokenUrl = "https://identity-server-dev.zellar.com.br/connect/token";
   }
 
   String createURL() {
-    this.code = this. generateCodeChallenge();
+    this.codeVerifier = this.generateCodeChallenge();
+    /*inicializo a variavel que será encodada duas vezes*/
     this.redirectUriEncoded = this.redirectUri;
-    return loginUrl +
-        requestUrlEncode(
-            "/connect/authorize/callback?redirect_uri=$redirectUriEncoded&client_id=$clientId&response_type=code&scope=$scope&code_challenge=$code&code_challenge_method=S256");
+    return loginUrl + requestUrlEncode("/connect/authorize/callback?redirect_uri=$redirectUriEncoded&client_id=$clientId&response_type=code&scope=$scope&code_challenge=$codeVerifier&code_challenge_method=S256");
   }
 
   String generateCodeChallenge() {

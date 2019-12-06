@@ -13,8 +13,7 @@ class RequestCode {
 
   var _onCodeStream;
 
-  Stream<String> get _onCode =>
-      _onCodeStream ??= _onCodeListener.stream.asBroadcastStream();
+  Stream<String> get _onCode =>  _onCodeStream ??= _onCodeListener.stream.asBroadcastStream();
 
   RequestCode(Config config) : _config = config {
     _authorizationRequest = new AuthorizationRequest(config);
@@ -39,7 +38,7 @@ class RequestCode {
     RequestUtils rs;
 
     String url = _config.createURL();
-    String codeVerifier = _config.code;
+    String codeVerifier = _config.codeVerifier;
 
     await _webView.launch(url,
         clearCookies: _authorizationRequest.clearCookies,
@@ -55,6 +54,8 @@ class RequestCode {
       }
 
       if (uri.queryParameters["code"] != null) {
+        print( "O Code Challange é : "+
+            uri.queryParameters["code"]);
         _webView.close();
         _onCodeListener.add(uri.queryParameters["code"]);
       }

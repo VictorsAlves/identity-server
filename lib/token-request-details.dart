@@ -11,8 +11,8 @@ class TokenRequestDetails {
       "client_id": config.clientId,
       "code": code,
       "redirect_uri":config.redirectUri,
-      "grant_type": "authorization_code",
-      "code_verifier": config.code
+      "grant_type": "urn:ietf:params:oauth:grant-type:device_code",
+      "device_code": config.codeVerifier
     };
 
     if (config.resource != null)
