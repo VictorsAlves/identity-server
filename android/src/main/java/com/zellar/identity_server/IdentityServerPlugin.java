@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.net.Uri;
 
 import androidx.annotation.Nullable;
+import androidx.browser.customtabs.CustomTabsIntent;
+import androidx.core.content.ContextCompat;
 
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
@@ -208,11 +210,20 @@ public class IdentityServerPlugin implements MethodChannel.MethodCallHandler, Pl
         if (allowInsecureConnections) {
             authConfigBuilder.setConnectionBuilder(InsecureConnectionBuilder.INSTANCE);
         }
+        // configurações do browser
+        CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
+        builder.enableUrlBarHiding();
 
+        builder.setToolbarColor(
+                ContextCompat.getColor(registrar.context(),R.color.browser_actions_bg_grey));
+        builder.setShowTitle(false);
+        builder.addDefaultShareMenuItem();
+// fim
         AppAuthConfiguration authConfig = authConfigBuilder.build();
         AuthorizationRequest authRequest = authRequestBuilder.build();
         AuthorizationService authService = new AuthorizationService(registrar.context(), authConfig);
-        Intent authIntent = authService.getAuthorizationRequestIntent(authRequest);
+    // old    Intent authIntent = authService.getAuthorizationRequestIntent(authRequest);
+        Intent authIntent = authService.getAuthorizationRequestIntent(authRequest, builder.build());
         registrar.activity().startActivityForResult(authIntent, exchangeCode ? RC_AUTH_EXCHANGE_CODE : RC_AUTH);
     }
 
