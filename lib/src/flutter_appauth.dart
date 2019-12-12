@@ -1,5 +1,4 @@
 import 'package:flutter/services.dart';
-import 'package:meta/meta.dart';
 import 'authorization_request.dart';
 import 'authorization_response.dart';
 import 'authorization_token_request.dart';
@@ -12,7 +11,7 @@ class FlutterAppAuth {
 
   final MethodChannel _channel;
 
-  @visibleForTesting
+
   FlutterAppAuth.private(MethodChannel channel) : _channel = channel;
 
   static final FlutterAppAuth _instance = new FlutterAppAuth.private(
