@@ -37,6 +37,7 @@ public class IdentityServerPlugin implements MethodChannel.MethodCallHandler, Pl
     private static final String AUTHORIZE_AND_EXCHANGE_CODE_METHOD = "authorizeAndExchangeCode";
     private static final String AUTHORIZE_METHOD = "authorize";
     private static final String TOKEN_METHOD = "token";
+    private static final String AUTHORIZE_WEBVIEW = "authorizeWebView";
 
     private static final String DISCOVERY_ERROR_CODE = "discovery_failed";
     private static final String AUTHORIZE_AND_EXCHANGE_CODE_ERROR_CODE = "authorize_and_exchange_code_failed";
@@ -57,6 +58,42 @@ public class IdentityServerPlugin implements MethodChannel.MethodCallHandler, Pl
     public IdentityServerPlugin(PluginRegistry.Registrar registrar) {
         this.registrar = registrar;
         this.registrar.addActivityResultListener(this);
+    }
+
+    @Override
+    public void onMethodCall(MethodCall call, MethodChannel.Result result) {
+        Map<String, Object> arguments = call.arguments();
+        switch (call.method) {
+            case AUTHORIZE_AND_EXCHANGE_CODE_METHOD:
+                checkAndSetPendingOperation(call.method, result);
+                handleAuthorizeMethodCall(arguments, true);
+                break;
+            case AUTHORIZE_METHOD:
+                checkAndSetPendingOperation(call.method, result);
+                handleAuthorizeMethodCall(arguments, false);
+                break;
+            case TOKEN_METHOD:
+                checkAndSetPendingOperation(call.method, result);
+                handleTokenMethodCall(arguments);
+                break;
+
+            case AUTHORIZE_WEBVIEW:
+                //checkAndSetPendingOperation(call.method, result);
+                login(arguments);
+                //handleTokenMethodCall(arguments);
+                break;
+            default:
+                result.notImplemented();
+        }
+    }
+
+    private void login(Map<String, Object> arguments) {
+        // toda lista de argumentos configurados
+        TokenRequestParameters tokenRequest  =  processTokenRequestArguments(arguments);
+
+
+
+
     }
 
 
@@ -215,14 +252,14 @@ public class IdentityServerPlugin implements MethodChannel.MethodCallHandler, Pl
         builder.enableUrlBarHiding();
 
         builder.setToolbarColor(
-                ContextCompat.getColor(registrar.context(),R.color.browser_actions_bg_grey));
+                ContextCompat.getColor(registrar.context(), R.color.browser_actions_bg_grey));
         builder.setShowTitle(false);
         builder.addDefaultShareMenuItem();
 // fim
         AppAuthConfiguration authConfig = authConfigBuilder.build();
         AuthorizationRequest authRequest = authRequestBuilder.build();
         AuthorizationService authService = new AuthorizationService(registrar.context(), authConfig);
-    // old    Intent authIntent = authService.getAuthorizationRequestIntent(authRequest);
+        // old    Intent authIntent = authService.getAuthorizationRequestIntent(authRequest);
         Intent authIntent = authService.getAuthorizationRequestIntent(authRequest, builder.build());
         registrar.activity().startActivityForResult(authIntent, exchangeCode ? RC_AUTH_EXCHANGE_CODE : RC_AUTH);
     }
@@ -305,6 +342,7 @@ public class IdentityServerPlugin implements MethodChannel.MethodCallHandler, Pl
         return false;
     }
 
+    // quando o aplicativo retorna da webview
     private void processAuthorizationData(final AuthorizationResponse authResponse, AuthorizationException authException, boolean exchangeCode) {
         if (authException == null) {
             if (exchangeCode) {
@@ -357,31 +395,11 @@ public class IdentityServerPlugin implements MethodChannel.MethodCallHandler, Pl
 
     private Map<String, Object> authorizationResponseToMap(AuthorizationResponse authResponse) {
         Map<String, Object> responseMap = new HashMap<>();
+        // esse mapper é preenchido quando meu code verifier não for igual a nulo.
         responseMap.put("codeVerifier", authResponse.request.codeVerifier);
         responseMap.put("authorizationCode", authResponse.authorizationCode);
         responseMap.put("authorizationAdditionalParameters", authResponse.additionalParameters);
         return responseMap;
-    }
-
-    @Override
-    public void onMethodCall(MethodCall call, MethodChannel.Result result) {
-        Map<String, Object> arguments = call.arguments();
-        switch (call.method) {
-            case AUTHORIZE_AND_EXCHANGE_CODE_METHOD:
-                checkAndSetPendingOperation(call.method, result);
-                handleAuthorizeMethodCall(arguments, true);
-                break;
-            case AUTHORIZE_METHOD:
-                checkAndSetPendingOperation(call.method, result);
-                handleAuthorizeMethodCall(arguments, false);
-                break;
-            case TOKEN_METHOD:
-                checkAndSetPendingOperation(call.method, result);
-                handleTokenMethodCall(arguments);
-                break;
-            default:
-                result.notImplemented();
-        }
     }
 
 
