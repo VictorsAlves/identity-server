@@ -2,12 +2,16 @@ package com.zellar.identity_server;
 
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
+
+import com.zellar.identity_server.webview.*;
 
 import androidx.annotation.Nullable;
 import androidx.browser.customtabs.CustomTabsIntent;
-import androidx.core.content.ContextCompat;
 
+
+import io.flutter.plugin.common.BinaryMessenger;
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.PluginRegistry;
@@ -78,24 +82,49 @@ public class IdentityServerPlugin implements MethodChannel.MethodCallHandler, Pl
                 break;
 
             case AUTHORIZE_WEBVIEW:
-                //checkAndSetPendingOperation(call.method, result);
-                login(arguments);
+                /*checkAndSetPendingOperation(call.method, result);
+                login(arguments, true);*/
                 //handleTokenMethodCall(arguments);
-                break;
+
+
+                BinaryMessenger messenger = null;
+                int id;
+                Map<String, Object> params = null;
+
+                FlutterWebView webview = new FlutterWebView(registrar.context(), messenger, params, registrar.view());
+                webview.escolhaDeMetodo("loadUrl");
+
+
             default:
                 result.notImplemented();
         }
     }
 
-    private void login(Map<String, Object> arguments) {
-        // toda lista de argumentos configurados
-        TokenRequestParameters tokenRequest  =  processTokenRequestArguments(arguments);
+    private void login(Map<String, Object> arguments, final boolean exchangeCode) {
+        final AuthorizationTokenRequestParameters tokenRequestParameters = processAuthorizationTokenRequestArguments(arguments);
+        if (tokenRequestParameters.serviceConfigurationParameters != null) {
+            AuthorizationServiceConfiguration serviceConfiguration = requestParametersToServiceConfiguration(tokenRequestParameters);
+            performAuthorization(serviceConfiguration, tokenRequestParameters.clientId, tokenRequestParameters.redirectUrl, tokenRequestParameters.scopes, tokenRequestParameters.loginHint, tokenRequestParameters.additionalParameters, exchangeCode, tokenRequestParameters.promptValues);
+        } else {
+            AuthorizationServiceConfiguration.RetrieveConfigurationCallback callback = new AuthorizationServiceConfiguration.RetrieveConfigurationCallback() {
+                @Override
+                public void onFetchConfigurationCompleted(@Nullable AuthorizationServiceConfiguration serviceConfiguration, @Nullable AuthorizationException ex) {
+                    if (ex == null) {
+                        performAuthorization(serviceConfiguration, tokenRequestParameters.clientId, tokenRequestParameters.redirectUrl, tokenRequestParameters.scopes, tokenRequestParameters.loginHint, tokenRequestParameters.additionalParameters, exchangeCode, tokenRequestParameters.promptValues);
+                    } else {
+                        finishWithDiscoveryError(ex);
+                    }
+                }
+            };
+            if (tokenRequestParameters.discoveryUrl != null) {
+                AuthorizationServiceConfiguration.fetchFromUrl(Uri.parse(tokenRequestParameters.discoveryUrl), callback);
+            } else {
+                AuthorizationServiceConfiguration.fetchFromIssuer(Uri.parse(tokenRequestParameters.issuer), callback);
 
-
-
+            }
+        }
 
     }
-
 
     public static void registerWith(PluginRegistry.Registrar registrar) {
         final MethodChannel channel = new MethodChannel(registrar.messenger(), "identity_server.IdentityServerPlugin");
@@ -248,19 +277,23 @@ public class IdentityServerPlugin implements MethodChannel.MethodCallHandler, Pl
             authConfigBuilder.setConnectionBuilder(InsecureConnectionBuilder.INSTANCE);
         }
         // configurações do browser
-        CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
-        builder.enableUrlBarHiding();
+        CustomTabsIntent.Builder webviewchrome = new CustomTabsIntent.Builder();
+        webviewchrome.enableUrlBarHiding();
 
-        builder.setToolbarColor(
-                ContextCompat.getColor(registrar.context(), R.color.browser_actions_bg_grey));
-        builder.setShowTitle(false);
-        builder.addDefaultShareMenuItem();
+        int cor = Color.argb(255, 255, 255, 255);
+       /* webviewchrome.setToolbarColor(
+                ContextCompat.getColor(registrar.context(), R.color.browser_actions_bg_grey));*/
+        webviewchrome.setShowTitle(false);
+
+        webviewchrome.setToolbarColor(cor);
+
 // fim
         AppAuthConfiguration authConfig = authConfigBuilder.build();
         AuthorizationRequest authRequest = authRequestBuilder.build();
         AuthorizationService authService = new AuthorizationService(registrar.context(), authConfig);
         // old    Intent authIntent = authService.getAuthorizationRequestIntent(authRequest);
-        Intent authIntent = authService.getAuthorizationRequestIntent(authRequest, builder.build());
+
+        Intent authIntent = authService.getAuthorizationRequestIntent(authRequest, webviewchrome.build());
         registrar.activity().startActivityForResult(authIntent, exchangeCode ? RC_AUTH_EXCHANGE_CODE : RC_AUTH);
     }
 
@@ -342,7 +375,7 @@ public class IdentityServerPlugin implements MethodChannel.MethodCallHandler, Pl
         return false;
     }
 
-    // quando o aplicativo retorna da webview
+    // quando o aplicativo retorna da pagina web
     private void processAuthorizationData(final AuthorizationResponse authResponse, AuthorizationException authException, boolean exchangeCode) {
         if (authException == null) {
             if (exchangeCode) {
@@ -412,6 +445,7 @@ public class IdentityServerPlugin implements MethodChannel.MethodCallHandler, Pl
             this.result = result;
         }
     }
+
 
     private class TokenRequestParameters {
         final String clientId;

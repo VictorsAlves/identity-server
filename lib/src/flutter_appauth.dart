@@ -57,4 +57,20 @@ class FlutterAppAuth {
         result['tokenType'],
         result['tokenAdditionalParameters']?.cast<String, String>());
   }
+
+
+  /// For exchanging tokens
+  Future<TokenResponse> authorizeWebView(TokenRequest request) async {
+    var result = await _channel.invokeMethod('authorizeWebView', request.toMap());
+    return TokenResponse(
+        result['accessToken'],
+        result['refreshToken'],
+        result['accessTokenExpirationTime'] == null
+            ? null
+            : DateTime.fromMillisecondsSinceEpoch(
+            result['accessTokenExpirationTime'].toInt()),
+        result['idToken'],
+        result['tokenType'],
+        result['tokenAdditionalParameters']?.cast<String, String>());
+  }
 }

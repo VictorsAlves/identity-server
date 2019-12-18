@@ -17,10 +17,10 @@ class _MyAppState extends State<MyApp> {
   String _refreshToken;
   String _accessToken;
   TextEditingController _authorizationCodeTextController =
-  TextEditingController();
+      TextEditingController();
   TextEditingController _accessTokenTextController = TextEditingController();
   TextEditingController _accessTokenExpirationTextController =
-  TextEditingController();
+      TextEditingController();
 
   TextEditingController _idTokenTextController = TextEditingController();
   TextEditingController _refreshTokenTextController = TextEditingController();
@@ -28,6 +28,7 @@ class _MyAppState extends State<MyApp> {
 
   String _clientId = 'native.code';
   String _redirectUrl = 'io.identityserver.demo:/oauthredirect';
+
   //String _issuer = 'https://demo.identityserver.io';
   String _discoveryUrl =
       'https://demo.identityserver.io/.well-known/openid-configuration';
@@ -40,9 +41,9 @@ class _MyAppState extends State<MyApp> {
   ];
 
   AuthorizationServiceConfiguration _serviceConfiguration =
-  AuthorizationServiceConfiguration(
-      'https://demo.identityserver.io/connect/authorize',
-      'https://demo.identityserver.io/connect/token');
+      AuthorizationServiceConfiguration(
+          'https://demo.identityserver.io/connect/authorize',
+          'https://demo.identityserver.io/connect/token');
 
   @override
   void initState() {
@@ -115,18 +116,19 @@ class _MyAppState extends State<MyApp> {
                 onPressed: _authorizationCode != null ? _exchangeCode : null,
               ),
               RaisedButton(
-                child: Text('Sign in with auto code exchange'),
+                child: Text('login'),
                 onPressed: () async {
                   setBusyState();
 
                   // show that we can also explicitly specify the endpoints rather than getting from the details from the discovery document
-                  var result = await _appAuth.authorizeAndExchangeCode(
+                  var result =
+                      await _appAuth.authorizeWebView(
                     AuthorizationTokenRequest(_clientId, _redirectUrl,
                         serviceConfiguration: _serviceConfiguration,
                         scopes: _scopes),
                   );
-
-                  // this code block demonstrates passing in values for the prompt parameter. in this case it prompts the user login even if they have already signed in. the list of supported values depends on the identity provider
+                  // this code block demonstrates passing in values for the prompt parameter. in this case it prompts the user
+                  // even if they have already signed in. the list of supported values depends on the identity provider
                   // var result = await _appAuth.authorizeAndExchangeCode(
                   //   AuthorizationTokenRequest(_clientId, _redirectUrl,
                   //       serviceConfiguration: _serviceConfiguration,
