@@ -82,17 +82,17 @@ public class IdentityServerPlugin implements MethodChannel.MethodCallHandler, Pl
                 break;
 
             case AUTHORIZE_WEBVIEW:
+
+                String initialUrl   = "initialUrl";
+                String initialFile  = "initialFile";
+                Map<String, String> initialData; //= "initialData";
+                Map<String, String> initialHeaders;// = "initialHeaders";
+                HashMap<String, Object> initialOptions;// ="initialOptions";
+                //InAppWebViewStatic();
                 /*checkAndSetPendingOperation(call.method, result);
                 login(arguments, true);*/
                 //handleTokenMethodCall(arguments);
 
-
-                BinaryMessenger messenger = null;
-                int id;
-                Map<String, Object> params = null;
-
-                FlutterWebView webview = new FlutterWebView(registrar.context(), messenger, params, registrar.view());
-                webview.escolhaDeMetodo("loadUrl");
 
 
             default:

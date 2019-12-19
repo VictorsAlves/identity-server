@@ -1,13 +1,13 @@
-package com.zellar.identity_server.webview;
+package com.zellar.identity_server.webview.in_app_web_view;
 
+import android.os.Handler;
 import android.os.IBinder;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputConnection;
 
-import java.util.logging.Handler;
+public class ThreadedInputConnectionProxyAdapterView extends View {
 
-final class ThreadedInputConnectionProxyAdapterView extends View {
     final Handler imeHandler;
     final IBinder windowToken;
     final View containerView;
@@ -30,7 +30,6 @@ final class ThreadedInputConnectionProxyAdapterView extends View {
         setVisibility(VISIBLE);
     }
 
-
     /**
      * Returns whether or not this is currently asynchronously acquiring an input connection.
      */
@@ -45,7 +44,12 @@ final class ThreadedInputConnectionProxyAdapterView extends View {
         isLocked = locked;
     }
 
-
+    /**
+     * This is expected to be called on the IME thread. See the setup required for this in {@link
+     * InputAwareWebView#checkInputConnectionProxy(View)}.
+     *
+     * <p>Delegates to ThreadedInputConnectionProxyView to get WebView's input connection.
+     */
     @Override
     public InputConnection onCreateInputConnection(final EditorInfo outAttrs) {
         triggerDelayed = false;
@@ -88,8 +92,10 @@ final class ThreadedInputConnectionProxyAdapterView extends View {
         return windowToken;
     }
 
-/*    @Override
+    @Override
     public Handler getHandler() {
         return imeHandler;
-    }*/
+    }
+
+
 }

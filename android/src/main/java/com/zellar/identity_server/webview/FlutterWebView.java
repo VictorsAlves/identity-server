@@ -1,137 +1,363 @@
 package com.zellar.identity_server.webview;
 
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.hardware.display.DisplayManager;
 import android.os.Build;
+import android.util.Log;
 import android.view.View;
-import android.webkit.WebStorage;
+import android.webkit.WebChromeClient;
+import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
-import java.util.Collections;
+import com.zellar.identity_server.webview.in_app_web_view.DisplayListenerProxy;
+import com.zellar.identity_server.webview.in_app_web_view.InAppWebView;
+import com.zellar.identity_server.webview.in_app_web_view.InAppWebViewOptions;
+
+import java.io.IOException;
+import java.lang.reflect.Field;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-
 import io.flutter.plugin.common.BinaryMessenger;
+import io.flutter.plugin.common.MethodCall;
+import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.platform.PlatformView;
 
-public class FlutterWebView implements PlatformView {
-    Map<String, Object> arguments;
-    Map<String, String> header;
-    String argument;
-    String url;
-    Object obj;
+import static com.zellar.identity_server.webview.InAppWebViewChromeClient.LOG_TAG;
 
-    private void populaMapper() {
-        this.argument = "argument";
-        this.url = "https://www.google.com.br";
+public class FlutterWebView implements PlatformView, MethodChannel.MethodCallHandler {
+    public InAppWebView webView;
+    public final MethodChannel channel;
 
-        for (int i = 0; i < 5; i++) {
-            this.arguments.put("value", "item");
-        }
-
-        for (int i = 0; i < 5; i++) {
-            this.header.put("value", "item");
-
-        }
-    }
-
-
-    private static final String JS_CHANNEL_NAMES_FIELD = "javascriptChannelNames";
-    private final InputAwareWebView webView;
-    // private final MethodChannel methodChannel;
-    private final FlutterWebViewClient flutterWebViewClient;
-    // private final Handler platformThreadHandler;
-
-
-    @SuppressWarnings("unchecked")
-    public FlutterWebView(
-            final Context context,
-            BinaryMessenger messenger,
-            Map<String, Object> params,
-            final View containerView) {
-
-        params.put("settings","settings");
-
-        params.put("autoMediaPlaybackPolicy","settings");
-
-        params.put("settings","settings");
-
-
+    public FlutterWebView(BinaryMessenger messenger, final Context context, int id, HashMap<String, Object> params, View containerView) {
         DisplayListenerProxy displayListenerProxy = new DisplayListenerProxy();
-        DisplayManager displayManager =
-                (DisplayManager) context.getSystemService(Context.DISPLAY_SERVICE);
+        DisplayManager displayManager = (DisplayManager) context.getSystemService(Context.DISPLAY_SERVICE);
         displayListenerProxy.onPreWebViewInitialization(displayManager);
-        webView = new InputAwareWebView(context, containerView);
+
+        String initialUrl = (String) params.get("initialUrl");
+        String initialFile = (String) params.get("initialFile");
+        Map<String, String> initialData = (Map<String, String>) params.get("initialData");
+        Map<String, String> initialHeaders = (Map<String, String>) params.get("initialHeaders");
+        HashMap<String, Object> initialOptions = (HashMap<String, Object>) params.get("initialOptions");
+
+        InAppWebViewOptions options = new InAppWebViewOptions();
+        options.parse(initialOptions);
+
+        webView = new InAppWebView(Shared.activity, this, id, options, containerView);
         displayListenerProxy.onPostWebViewInitialization(displayManager);
 
-//        platformThreadHandler = new Handler(context.getMainLooper());
-        // Allow local storage.
-        webView.getSettings().setDomStorageEnabled(true);
-
-        //methodChannel = new MethodChannel(messenger, "plugins.flutter.io/webview_" + id);
-        //methodChannel.setMethodCallHandler(this);
-        populaMapper();
-        String method = null;
-        flutterWebViewClient = new FlutterWebViewClient(method);
-        applySettings((Map<String, Object>) params.get("settings"));
-
-  /*      if (params.containsKey(JS_CHANNEL_NAMES_FIELD)) {
-            registerJavaScriptChannelNames((List<String>) params.get(JS_CHANNEL_NAMES_FIELD));
-        }*/
-
-        updateAutoMediaPlaybackPolicy((Integer) params.get("autoMediaPlaybackPolicy"));
-        if (params.containsKey("userAgent")) {
-            String userAgent = (String) params.get("userAgent");
-            updateUserAgent(userAgent);
+        // fix https://github.com/pichillilorenzo/flutter_inappwebview/issues/182
+        try {
+            Class superClass = webView.getClass().getSuperclass();
+            while (!superClass.getName().equals("android.view.View")) {
+                superClass = superClass.getSuperclass();
+            }
+            Field mContext = superClass.getDeclaredField("mContext");
+            mContext.setAccessible(true);
+            mContext.set(webView, context);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Log.e(LOG_TAG, "Cannot find mContext for this WebView");
         }
-        if (params.containsKey("initialUrl")) {
-            String url = (String) params.get("initialUrl");
-            webView.loadUrl(url);
+
+        webView.prepare();
+
+        channel = new MethodChannel(messenger, "com.zellar.identity_server.IdentityServerPlugin" + id);
+        channel.setMethodCallHandler(this);
+
+        if (initialFile != null) {
+            try {
+                initialUrl = Util.getUrlAsset(initialFile);
+            } catch (IOException e) {
+                e.printStackTrace();
+                Log.e(LOG_TAG, initialFile + " asset file cannot be found!", e);
+                return;
+            }
         }
+
+        if (initialData != null) {
+            String data = initialData.get("data");
+            String mimeType = initialData.get("mimeType");
+            String encoding = initialData.get("encoding");
+            String baseUrl = initialData.get("baseUrl");
+            String historyUrl = initialData.get("historyUrl");
+            webView.loadDataWithBaseURL(baseUrl, data, mimeType, encoding, historyUrl);
+        } else
+            webView.loadUrl(initialUrl, initialHeaders);
     }
 
-    public void escolhaDeMetodo(String metodo) {
-        switch (metodo) {
+    @Override
+    public void onMethodCall(MethodCall call, final MethodChannel.Result result) {
+        switch (call.method) {
+            case "getUrl":
+                result.success((webView != null) ? webView.getUrl() : null);
+                break;
+            case "getTitle":
+                result.success((webView != null) ? webView.getTitle() : null);
+                break;
+            case "getProgress":
+                result.success((webView != null) ? webView.getProgress() : null);
+                break;
             case "loadUrl":
-                loadUrl(url, header);
+                if (webView != null)
+                    webView.loadUrl((String) call.argument("url"), (Map<String, String>) call.argument("headers"), result);
+                else
+                    result.success(false);
                 break;
-            case "updateSettings":
-                updateSettings(arguments);
+            case "postUrl":
+                if (webView != null)
+                    webView.postUrl((String) call.argument("url"), (byte[]) call.argument("postData"), result);
+                else
+                    result.success(false);
                 break;
-            case "canGoBack":
-                canGoBack();
-                break;
-            case "canGoForward":
-                canGoForward();
-                break;
-            case "goBack":
-                goBack();
-                break;
-            case "goForward":
-                goForward();
-                break;
-            case "reload":
-                reload();
-                break;
-            case "currentUrl":
-                currentUrl();
+            case "loadData": {
+                String data = (String) call.argument("data");
+                String mimeType = (String) call.argument("mimeType");
+                String encoding = (String) call.argument("encoding");
+                String baseUrl = (String) call.argument("baseUrl");
+                String historyUrl = (String) call.argument("historyUrl");
+
+                if (webView != null)
+                    webView.loadData(data, mimeType, encoding, baseUrl, historyUrl, result);
+                else
+                    result.success(false);
+            }
+            break;
+            case "loadFile":
+                if (webView != null)
+                    webView.loadFile((String) call.argument("url"), (Map<String, String>) call.argument("headers"), result);
+                else
+                    result.success(false);
                 break;
             case "evaluateJavascript":
-                evaluateJavaScript(argument);
+                if (webView != null) {
+                    String source = (String) call.argument("source");
+                    webView.evaluateJavascript(source, result);
+                } else {
+                    result.success("");
+                }
                 break;
-            case "addJavascriptChannels":
-                addJavaScriptChannels(arguments);
+            case "injectJavascriptFileFromUrl":
+                if (webView != null) {
+                    String urlFile = (String) call.argument("urlFile");
+                    webView.injectJavascriptFileFromUrl(urlFile);
+                }
+                result.success(true);
                 break;
-            case "removeJavascriptChannels":
-                removeJavaScriptChannels(arguments);
+            case "injectCSSCode":
+                if (webView != null) {
+                    String source = (String) call.argument("source");
+                    webView.injectCSSCode(source);
+                }
+                result.success(true);
+                break;
+            case "injectCSSFileFromUrl":
+                if (webView != null) {
+                    String urlFile = (String) call.argument("urlFile");
+                    webView.injectCSSFileFromUrl(urlFile);
+                }
+                result.success(true);
+                break;
+            case "reload":
+                if (webView != null)
+                    webView.reload();
+                result.success(true);
+                break;
+            case "goBack":
+                if (webView != null)
+                    webView.goBack();
+                result.success(true);
+                break;
+            case "canGoBack":
+                result.success((webView != null) && webView.canGoBack());
+                break;
+            case "goForward":
+                if (webView != null)
+                    webView.goForward();
+                result.success(true);
+                break;
+            case "canGoForward":
+                result.success((webView != null) && webView.canGoForward());
+                break;
+            case "goBackOrForward":
+                if (webView != null)
+                    webView.goBackOrForward((Integer) call.argument("steps"));
+                result.success(true);
+                break;
+            case "canGoBackOrForward":
+                result.success((webView != null) && webView.canGoBackOrForward((Integer) call.argument("steps")));
+                break;
+            case "stopLoading":
+                if (webView != null)
+                    webView.stopLoading();
+                result.success(true);
+                break;
+            case "isLoading":
+                result.success((webView != null) && webView.isLoading());
+                break;
+            case "takeScreenshot":
+                if (webView != null)
+                    webView.takeScreenshot(result);
+                else
+                    result.success(null);
+                break;
+            case "setOptions":
+                if (webView != null) {
+                    InAppWebViewOptions inAppWebViewOptions = new InAppWebViewOptions();
+                    HashMap<String, Object> inAppWebViewOptionsMap = (HashMap<String, Object>) call.argument("options");
+                    inAppWebViewOptions.parse(inAppWebViewOptionsMap);
+                    webView.setOptions(inAppWebViewOptions, inAppWebViewOptionsMap);
+                }
+                result.success(true);
+                break;
+            case "getOptions":
+                result.success((webView != null) ? webView.getOptions() : null);
+                break;
+            case "getCopyBackForwardList":
+                result.success((webView != null) ? webView.getCopyBackForwardList() : null);
+                break;
+            case "startSafeBrowsing":
+                if (webView != null)
+                    webView.startSafeBrowsing(result);
+                else
+                    result.success(false);
+                break;
+            case "setSafeBrowsingWhitelist":
+                if (webView != null) {
+                    List<String> hosts = (List<String>) call.argument("hosts");
+                    webView.setSafeBrowsingWhitelist(hosts, result);
+                } else
+                    result.success(false);
+                break;
+            case "getSafeBrowsingPrivacyPolicyUrl":
+                if (webView != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
+                    result.success(webView.getSafeBrowsingPrivacyPolicyUrl().toString());
+                } else
+                    result.success(null);
                 break;
             case "clearCache":
-                clearCache(obj);
+                if (webView != null)
+                    webView.clearAllCache();
+                result.success(true);
+                break;
+            case "clearSslPreferences":
+                if (webView != null)
+                    webView.clearSslPreferences();
+                result.success(true);
+                break;
+            case "clearClientCertPreferences":
+                if (webView != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    webView.clearClientCertPreferences(new Runnable() {
+                        @Override
+                        public void run() {
+                            result.success(true);
+                        }
+                    });
+                } else {
+                    result.success(false);
+                }
+                break;
+            case "findAllAsync":
+                if (webView != null) {
+                    String find = (String) call.argument("find");
+                    webView.findAllAsync(find);
+                }
+                result.success(true);
+                break;
+            case "findNext":
+                if (webView != null) {
+                    Boolean forward = (Boolean) call.argument("forward");
+                    webView.findNext(forward);
+                    result.success(true);
+                } else {
+                    result.success(false);
+                }
+                break;
+            case "clearMatches":
+                if (webView != null) {
+                    webView.clearMatches();
+                    result.success(true);
+                } else {
+                    result.success(false);
+                }
+                break;
+            case "scrollTo":
+                if (webView != null) {
+                    Integer x = (Integer) call.argument("x");
+                    Integer y = (Integer) call.argument("y");
+                    webView.scrollTo(x, y);
+                }
+                result.success(true);
+                break;
+            case "scrollBy":
+                if (webView != null) {
+                    Integer x = (Integer) call.argument("x");
+                    Integer y = (Integer) call.argument("y");
+                    webView.scrollBy(x, y);
+                }
+                result.success(true);
+                break;
+            case "pause":
+                if (webView != null) {
+                    webView.onPause();
+                    result.success(true);
+                } else {
+                    result.success(false);
+                }
+                break;
+            case "resume":
+                if (webView != null) {
+                    webView.onResume();
+                    result.success(true);
+                } else {
+                    result.success(false);
+                }
+                break;
+            case "pauseTimers":
+                if (webView != null) {
+                    webView.pauseTimers();
+                    result.success(true);
+                } else {
+                    result.success(false);
+                }
+                break;
+            case "resumeTimers":
+                if (webView != null) {
+                    webView.resumeTimers();
+                    result.success(true);
+                } else {
+                    result.success(false);
+                }
+                break;
+            case "printCurrentPage":
+                if (webView != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    webView.printCurrentPage();
+                    result.success(true);
+                } else {
+                    result.success(false);
+                }
+                break;
+            case "getContentHeight":
+                result.success((webView != null) ? webView.getContentHeight() : null);
+                break;
+            case "zoomBy":
+                if (webView != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    Float zoomFactor = (Float) call.argument("zoomFactor");
+                    webView.zoomBy(zoomFactor);
+                    result.success(true);
+                } else {
+                    result.success(false);
+                }
+                break;
+            case "getOriginalUrl":
+                result.success((webView != null) ? webView.getOriginalUrl() : null);
+                break;
+            case "getScale":
+                result.success((webView != null) ? webView.getUpdatedScale() : null);
                 break;
             default:
-                System.out.println("erro, não foi dessa vez!");
+                result.notImplemented();
         }
     }
 
@@ -140,166 +366,46 @@ public class FlutterWebView implements PlatformView {
         return webView;
     }
 
-    private void canGoBack() {
-        webView.canGoBack();
-    }
-
-    private void canGoForward() {
-        webView.canGoForward();
-    }
-
-    private void goBack() {
-        if (webView.canGoBack()) {
-            webView.goBack();
+    @Override
+    public void dispose() {
+        channel.setMethodCallHandler(null);
+        if (webView != null) {
+            webView.setWebChromeClient(new WebChromeClient());
+            webView.setWebViewClient(new WebViewClient() {
+                public void onPageFinished(WebView view, String url) {
+                    webView.dispose();
+                    webView.destroy();
+                    webView = null;
+                }
+            });
+            webView.loadUrl("about:blank");
         }
-
-    }
-
-    private void addJavaScriptChannels(Map<String, Object> arguments) {
-        List<String> channelNames = (List<String>) arguments;
-        registerJavaScriptChannelNames(channelNames);
-
-    }
-
-    private void removeJavaScriptChannels(Map<String, Object> arguments) {
-        List<String> channelNames = (List<String>) arguments;
-        for (String channelName : channelNames) {
-            webView.removeJavascriptInterface(channelName);
-        }
-
-    }
-
-    private void registerJavaScriptChannelNames(List<String> channelNames) {
-        Object obj = null;
-        for (String channelName : channelNames) {
-            webView.addJavascriptInterface(
-                    obj, channelName);
-        }
-    }
-
-    @TargetApi(Build.VERSION_CODES.KITKAT)
-    private void evaluateJavaScript(String arguments) {
-        String jsString = (String) arguments;
-        if (jsString == null) {
-            throw new UnsupportedOperationException("JavaScript string cannot be null");
-        }
-        webView.evaluateJavascript(
-                jsString,
-                new android.webkit.ValueCallback<String>() {
-                    @Override
-                    public void onReceiveValue(String value) {
-
-                    }
-                });
-    }
-
-    public void onInputConnectionUnlocked() {
-        webView.unlockInputConnection();
-    }
-
-    public void onInputConnectionLocked() {
-        webView.lockInputConnection();
-    }
-
-    private void clearCache(Object result) {
-        webView.clearCache(true);
-        WebStorage.getInstance().deleteAllData();
-    }
-
-    private void applySettings(Map<String, Object> settings) {
-        for (String key : settings.keySet()) {
-            switch (key) {
-                case "jsMode":
-                    updateJsMode((Integer) settings.get(key));
-                    break;
-                case "hasNavigationDelegate":
-                    final boolean hasNavigationDelegate = (boolean) settings.get(key);
-
-                    final WebViewClient webViewClient =
-                            flutterWebViewClient.createWebViewClient(hasNavigationDelegate);
-
-                    webView.setWebViewClient(webViewClient);
-                    break;
-                case "debuggingEnabled":
-                    final boolean debuggingEnabled = (boolean) settings.get(key);
-
-                    webView.setWebContentsDebuggingEnabled(debuggingEnabled);
-                    break;
-                case "userAgent":
-                    updateUserAgent((String) settings.get(key));
-                    break;
-                default:
-                    throw new IllegalArgumentException("Unknown WebView setting: " + key);
-            }
-        }
-    }
-
-    private void updateJsMode(int mode) {
-        switch (mode) {
-            case 0: // disabled
-                webView.getSettings().setJavaScriptEnabled(false);
-                break;
-            case 1: // unrestricted
-                webView.getSettings().setJavaScriptEnabled(true);
-                break;
-            default:
-                throw new IllegalArgumentException("Trying to set unknown JavaScript mode: " + mode);
-        }
-    }
-
-    private void updateAutoMediaPlaybackPolicy(int mode) {
-        // This is the index of the AutoMediaPlaybackPolicy enum, index 1 is always_allow, for all
-        // other values we require a user gesture.
-        boolean requireUserGesture = mode != 1;
-        webView.getSettings().setMediaPlaybackRequiresUserGesture(requireUserGesture);
-    }
-
- /*   private void registerJavaScriptChannelNames(List<String> channelNames) {
-        for (String channelName : channelNames) {
-            webView.addJavascriptInterface(
-                    new JavaScriptChannel(methodChannel, channelName, platformThreadHandler), channelName);
-        }
-    }*/
-
-    private void updateUserAgent(String userAgent) {
-        webView.getSettings().setUserAgentString(userAgent);
-    }
-
-
-    private void goForward() {
-        if (webView.canGoForward()) {
-            webView.goForward();
-        }
-
-    }
-
-    private void reload() {
-        webView.reload();
-
-    }
-
-    private void currentUrl() {
-        webView.getUrl();
-    }
-
-    @SuppressWarnings("unchecked")
-    private void updateSettings(Map<String, Object> arguments) {
-        applySettings((Map<String, Object>) arguments);
-
-    }
-
-    private void loadUrl(String url, Map<String, String> headers) {
-
-        if (headers == null) {
-            headers = Collections.emptyMap();
-        }
-        webView.loadUrl(url, headers);
     }
 
     @Override
-    public void dispose() {
-        webView.dispose();
-        webView.destroy();
+    public void onInputConnectionLocked() {
+        if (webView != null && webView.inAppBrowserActivity == null)
+            webView.lockInputConnection();
+    }
+
+    @Override
+    public void onInputConnectionUnlocked() {
+        if (webView != null && webView.inAppBrowserActivity == null)
+            webView.unlockInputConnection();
+    }
+
+    @Override
+    public void onFlutterViewAttached(View flutterView) {
+        if (webView != null) {
+            webView.setContainerView(flutterView);
+        }
+    }
+
+    @Override
+    public void onFlutterViewDetached() {
+        if (webView != null) {
+            webView.setContainerView(null);
+        }
     }
 
 }
