@@ -1,4 +1,5 @@
 import 'package:flutter/services.dart';
+import 'package:identity_server/src/webview/AppWebView.dart';
 import 'authorization_request.dart';
 import 'authorization_response.dart';
 import 'authorization_token_request.dart';
@@ -73,4 +74,20 @@ class FlutterAppAuth {
         result['tokenType'],
         result['tokenAdditionalParameters']?.cast<String, String>());
   }
+
+  /// For exchanging tokens
+/*  Future<TokenResponse> requestWebView(WebViewRequest request) async {
+    var result = await _channel.invokeMethod('Open', request.toMap());
+    return TokenResponse(
+        result['accessToken'],
+        result['refreshToken'],
+        result['accessTokenExpirationTime'] == null
+            ? null
+            : DateTime.fromMillisecondsSinceEpoch(
+            result['accessTokenExpirationTime'].toInt()),
+        result['idToken'],
+        result['tokenType'],
+        result['tokenAdditionalParameters']?.cast<String, String>());
+  }*/
+
 }

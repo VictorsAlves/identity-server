@@ -121,15 +121,20 @@ class _MyAppState extends State<MyApp> {
                   setBusyState();
 
                   // show that we can also explicitly specify the endpoints rather than getting from the details from the discovery document
-                  var result =
-                      await _appAuth.authorizeWebView(
+                  var initialOptions;
+                  var initialData;
+                  var issuer;
+                  List<String> initialHeaders;
+                  bool allowInsecureConnections;
+                  var result = await _appAuth.authorizeAndExchangeCode(
                     AuthorizationTokenRequest(_clientId, _redirectUrl,
                         serviceConfiguration: _serviceConfiguration,
-                        scopes: _scopes),
+                        scopes: _scopes,
+                        promptValues: ['login']),
                   );
-                  // this code block demonstrates passing in values for the prompt parameter. in this case it prompts the user
-                  // even if they have already signed in. the list of supported values depends on the identity provider
-                  // var result = await _appAuth.authorizeAndExchangeCode(
+                  // this code bs passing in values for the prompt parameter. in this case it promptslock demonstrate the user
+                  // even if theytity provider have already signed in. the list of supported values depends on the iden
+                  //                  // var result = await _appAuth.authorizeAndExchangeCode(
                   //   AuthorizationTokenRequest(_clientId, _redirectUrl,
                   //       serviceConfiguration: _serviceConfiguration,
                   //       scopes: _scopes,

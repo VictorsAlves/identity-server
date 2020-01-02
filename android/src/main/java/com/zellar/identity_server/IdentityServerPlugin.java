@@ -5,11 +5,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
 
-import com.zellar.identity_server.webview.*;
-
-import androidx.annotation.Nullable;
 import androidx.browser.customtabs.CustomTabsIntent;
-
 
 import io.flutter.plugin.common.BinaryMessenger;
 import io.flutter.plugin.common.MethodCall;
@@ -83,46 +79,28 @@ public class IdentityServerPlugin implements MethodChannel.MethodCallHandler, Pl
 
             case AUTHORIZE_WEBVIEW:
 
-                String initialUrl   = "initialUrl";
-                String initialFile  = "initialFile";
+                /*checkAndSetPendingOperation(call.method, result);
+                String initialUrl = "initialUrl";
+                String initialFile = "initialFile";
                 Map<String, String> initialData; //= "initialData";
                 Map<String, String> initialHeaders;// = "initialHeaders";
-                HashMap<String, Object> initialOptions;// ="initialOptions";
+                HashMap<String, Object> initialOptions;// ="initialOptions";*/
+                // InAppWebViewFlutterPlugin.inAppWebViewStatic.onMethodCall(call, result);
+                // InAppWebViewFlutterPlugin.registerWith(registrar);
                 //InAppWebViewStatic();
-                /*checkAndSetPendingOperation(call.method, result);
-                login(arguments, true);*/
+                //checkAndSetPendingOperation(call.method, result);
+                // handleTokenMethodCall(arguments);
+                login(arguments, call.method, result);
                 //handleTokenMethodCall(arguments);
-
-
+                System.out.println("oi");
 
             default:
                 result.notImplemented();
         }
     }
 
-    private void login(Map<String, Object> arguments, final boolean exchangeCode) {
-        final AuthorizationTokenRequestParameters tokenRequestParameters = processAuthorizationTokenRequestArguments(arguments);
-        if (tokenRequestParameters.serviceConfigurationParameters != null) {
-            AuthorizationServiceConfiguration serviceConfiguration = requestParametersToServiceConfiguration(tokenRequestParameters);
-            performAuthorization(serviceConfiguration, tokenRequestParameters.clientId, tokenRequestParameters.redirectUrl, tokenRequestParameters.scopes, tokenRequestParameters.loginHint, tokenRequestParameters.additionalParameters, exchangeCode, tokenRequestParameters.promptValues);
-        } else {
-            AuthorizationServiceConfiguration.RetrieveConfigurationCallback callback = new AuthorizationServiceConfiguration.RetrieveConfigurationCallback() {
-                @Override
-                public void onFetchConfigurationCompleted(@Nullable AuthorizationServiceConfiguration serviceConfiguration, @Nullable AuthorizationException ex) {
-                    if (ex == null) {
-                        performAuthorization(serviceConfiguration, tokenRequestParameters.clientId, tokenRequestParameters.redirectUrl, tokenRequestParameters.scopes, tokenRequestParameters.loginHint, tokenRequestParameters.additionalParameters, exchangeCode, tokenRequestParameters.promptValues);
-                    } else {
-                        finishWithDiscoveryError(ex);
-                    }
-                }
-            };
-            if (tokenRequestParameters.discoveryUrl != null) {
-                AuthorizationServiceConfiguration.fetchFromUrl(Uri.parse(tokenRequestParameters.discoveryUrl), callback);
-            } else {
-                AuthorizationServiceConfiguration.fetchFromIssuer(Uri.parse(tokenRequestParameters.issuer), callback);
-
-            }
-        }
+    private void login(Map<String, Object> arguments, String method, MethodChannel.Result result) {
+        System.out.println("teste ");
 
     }
 
@@ -191,7 +169,7 @@ public class IdentityServerPlugin implements MethodChannel.MethodCallHandler, Pl
         } else {
             AuthorizationServiceConfiguration.RetrieveConfigurationCallback callback = new AuthorizationServiceConfiguration.RetrieveConfigurationCallback() {
                 @Override
-                public void onFetchConfigurationCompleted(@Nullable AuthorizationServiceConfiguration serviceConfiguration, @Nullable AuthorizationException ex) {
+                public void onFetchConfigurationCompleted(AuthorizationServiceConfiguration serviceConfiguration, AuthorizationException ex) {
                     if (ex == null) {
                         performAuthorization(serviceConfiguration, tokenRequestParameters.clientId, tokenRequestParameters.redirectUrl, tokenRequestParameters.scopes, tokenRequestParameters.loginHint, tokenRequestParameters.additionalParameters, exchangeCode, tokenRequestParameters.promptValues);
                     } else {
@@ -224,7 +202,7 @@ public class IdentityServerPlugin implements MethodChannel.MethodCallHandler, Pl
             if (tokenRequestParameters.discoveryUrl != null) {
                 AuthorizationServiceConfiguration.fetchFromUrl(Uri.parse(tokenRequestParameters.discoveryUrl), new AuthorizationServiceConfiguration.RetrieveConfigurationCallback() {
                     @Override
-                    public void onFetchConfigurationCompleted(@Nullable AuthorizationServiceConfiguration serviceConfiguration, @Nullable AuthorizationException ex) {
+                    public void onFetchConfigurationCompleted(AuthorizationServiceConfiguration serviceConfiguration, AuthorizationException ex) {
                         if (ex == null) {
                             performTokenRequest(serviceConfiguration, tokenRequestParameters);
                         } else {
@@ -237,7 +215,7 @@ public class IdentityServerPlugin implements MethodChannel.MethodCallHandler, Pl
 
                 AuthorizationServiceConfiguration.fetchFromIssuer(Uri.parse(tokenRequestParameters.issuer), new AuthorizationServiceConfiguration.RetrieveConfigurationCallback() {
                     @Override
-                    public void onFetchConfigurationCompleted(@Nullable AuthorizationServiceConfiguration serviceConfiguration, @Nullable AuthorizationException ex) {
+                    public void onFetchConfigurationCompleted(AuthorizationServiceConfiguration serviceConfiguration, AuthorizationException ex) {
                         if (ex == null) {
                             performTokenRequest(serviceConfiguration, tokenRequestParameters);
                         } else {
