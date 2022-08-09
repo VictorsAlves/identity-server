@@ -29,7 +29,6 @@ class _MyAppState extends State<MyApp> {
   String _clientId = 'native.code';
   String _redirectUrl = 'io.identityserver.demo:/oauthredirect';
 
-  //String _issuer = 'https://demo.identityserver.io';
   String _discoveryUrl =
       'https://demo.identityserver.io/.well-known/openid-configuration';
   List<String> _scopes = [
@@ -97,15 +96,6 @@ class _MyAppState extends State<MyApp> {
                         loginHint: 'bob'),
                   );
 
-                  // or just use the issuer
-                  // var result = await _appAuth.authorize(
-                  //   AuthorizationRequest(
-                  //     _clientId,
-                  //     _redirectUrl,
-                  //     issuer: _issuer,
-                  //     scopes: _scopes,
-                  //   ),
-                  // );
                   if (result != null) {
                     _processAuthResponse(result);
                   }
@@ -132,14 +122,6 @@ class _MyAppState extends State<MyApp> {
                         scopes: _scopes,
                         promptValues: ['login']),
                   );
-                  // this code bs passing in values for the prompt parameter. in this case it promptslock demonstrate the user
-                  // even if theytity provider have already signed in. the list of supported values depends on the iden
-                  //                  // var result = await _appAuth.authorizeAndExchangeCode(
-                  //   AuthorizationTokenRequest(_clientId, _redirectUrl,
-                  //       serviceConfiguration: _serviceConfiguration,
-                  //       scopes: _scopes,
-                  //       promptValues: ['login']),
-                  // );
 
                   if (result != null) {
                     _processAuthTokenResponse(result);
