@@ -29,7 +29,7 @@ class _MyAppState extends State<MyApp> {
   String _clientId = 'native.code';
   String _redirectUrl = 'io.identityserver.demo:/oauthredirect';
 
-  //String _issuer = 'https://demo.identityserver.io';
+  String _issuer = 'https://demo.identityserver.io';
   String _discoveryUrl =
       'https://demo.identityserver.io/.well-known/openid-configuration';
   List<String> _scopes = [

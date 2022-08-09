@@ -1,69 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="NONE" />
+  </component>
   <component name="ChangeListManager">
     <list default="true" id="4f0423b5-a073-44d0-afd4-0b5181dccea3" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/lib/src/webview/AppWebView.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/src/webview/WebViewRequestDetails.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/libraries/Dart_SDK.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Dart_SDK.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/src/main/java/com/zellar/identity_server/IdentityServerPlugin.java" beforeDir="false" afterPath="$PROJECT_DIR$/android/src/main/java/com/zellar/identity_server/IdentityServerPlugin.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/src/main/java/com/zellar/identity_server/webview/CredentialDatabaseHandler.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/src/main/java/com/zellar/identity_server/webview/FlutterWebView.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/src/main/java/com/zellar/identity_server/webview/FlutterWebViewFactory.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/src/main/java/com/zellar/identity_server/webview/InAppBrowserActivity.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/src/main/java/com/zellar/identity_server/webview/InAppBrowserOptions.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/src/main/java/com/zellar/identity_server/webview/InAppWebViewChromeClient.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/src/main/java/com/zellar/identity_server/webview/InAppWebViewFlutterPlugin.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/src/main/java/com/zellar/identity_server/webview/InAppWebViewStatic.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/src/main/java/com/zellar/identity_server/webview/JavaScriptBridgeInterface.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/src/main/java/com/zellar/identity_server/webview/MyCookieManager.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/src/main/java/com/zellar/identity_server/webview/MyWebStorage.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/src/main/java/com/zellar/identity_server/webview/Options.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/src/main/java/com/zellar/identity_server/webview/RequestPermissionHandler.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/src/main/java/com/zellar/identity_server/webview/Shared.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/src/main/java/com/zellar/identity_server/webview/Util.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/src/main/java/com/zellar/identity_server/webview/chrome_custom_tabs/ChromeCustomTabsActivity.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/src/main/java/com/zellar/identity_server/webview/chrome_custom_tabs/ChromeCustomTabsOptions.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/src/main/java/com/zellar/identity_server/webview/chrome_custom_tabs/CustomTabActivityHelper.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/src/main/java/com/zellar/identity_server/webview/chrome_custom_tabs/CustomTabsHelper.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/src/main/java/com/zellar/identity_server/webview/chrome_custom_tabs/KeepAliveService.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/src/main/java/com/zellar/identity_server/webview/chrome_custom_tabs/ServiceConnection.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/src/main/java/com/zellar/identity_server/webview/chrome_custom_tabs/ServiceConnectionCallback.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/src/main/java/com/zellar/identity_server/webview/content_blocker/ContentBlocker.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/src/main/java/com/zellar/identity_server/webview/content_blocker/ContentBlockerAction.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/src/main/java/com/zellar/identity_server/webview/content_blocker/ContentBlockerActionType.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/src/main/java/com/zellar/identity_server/webview/content_blocker/ContentBlockerHandler.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/src/main/java/com/zellar/identity_server/webview/content_blocker/ContentBlockerTrigger.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/src/main/java/com/zellar/identity_server/webview/content_blocker/ContentBlockerTriggerResourceType.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/src/main/java/com/zellar/identity_server/webview/credential_database/Credential.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/src/main/java/com/zellar/identity_server/webview/credential_database/CredentialContract.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/src/main/java/com/zellar/identity_server/webview/credential_database/CredentialDao.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/src/main/java/com/zellar/identity_server/webview/credential_database/CredentialDatabase.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/src/main/java/com/zellar/identity_server/webview/credential_database/CredentialDatabaseHelper.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/src/main/java/com/zellar/identity_server/webview/credential_database/ProtectionSpace.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/src/main/java/com/zellar/identity_server/webview/credential_database/ProtectionSpaceContract.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/src/main/java/com/zellar/identity_server/webview/credential_database/ProtectionSpaceDao.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/src/main/java/com/zellar/identity_server/webview/in_app_web_view/DisplayListenerProxy.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/src/main/java/com/zellar/identity_server/webview/in_app_web_view/InAppBrowser.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/src/main/java/com/zellar/identity_server/webview/in_app_web_view/InAppWebView.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/src/main/java/com/zellar/identity_server/webview/in_app_web_view/InAppWebViewClient.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/src/main/java/com/zellar/identity_server/webview/in_app_web_view/InAppWebViewOptions.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/src/main/java/com/zellar/identity_server/webview/in_app_web_view/InputAwareWebView.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/src/main/java/com/zellar/identity_server/webview/in_app_web_view/PreferredContentModeOptionType.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/src/main/java/com/zellar/identity_server/webview/in_app_web_view/ThreadedInputConnectionProxyAdapterView.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/example/.flutter-plugins-dependencies" beforeDir="false" afterPath="$PROJECT_DIR$/example/.flutter-plugins-dependencies" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/example/ios/Flutter/Debug.xcconfig" beforeDir="false" afterPath="$PROJECT_DIR$/example/ios/Flutter/Debug.xcconfig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/example/ios/Flutter/Release.xcconfig" beforeDir="false" afterPath="$PROJECT_DIR$/example/ios/Flutter/Release.xcconfig" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/example/lib/main.dart" beforeDir="false" afterPath="$PROJECT_DIR$/example/lib/main.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/Classes/IdentityServerPlugin.h" beforeDir="false" afterPath="$PROJECT_DIR$/ios/Classes/IdentityServerPlugin.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/Classes/IdentityServerPlugin.m" beforeDir="false" afterPath="$PROJECT_DIR$/ios/Classes/IdentityServerPlugin.m" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/identity_server.podspec" beforeDir="false" afterPath="$PROJECT_DIR$/ios/identity_server.podspec" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/src/flutter_appauth.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/src/flutter_appauth.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/example/pubspec.lock" beforeDir="false" afterPath="$PROJECT_DIR$/example/pubspec.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pubspec.lock" beforeDir="false" afterPath="$PROJECT_DIR$/pubspec.lock" afterDir="false" />
     </list>
-    <ignored path="$PROJECT_DIR$/.dart_tool/" />
-    <ignored path="$PROJECT_DIR$/.idea/" />
-    <ignored path="$PROJECT_DIR$/.pub/" />
-    <ignored path="$PROJECT_DIR$/build/" />
-    <ignored path="$PROJECT_DIR$/example/.pub/" />
-    <ignored path="$PROJECT_DIR$/example/build/" />
-    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -71,109 +21,6 @@
   </component>
   <component name="DefaultGradleProjectSettings">
     <option name="isMigrated" value="true" />
-  </component>
-  <component name="ExecutionTargetManager" SELECTED_TARGET="0049046139" />
-  <component name="FileEditorManager">
-    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/example/lib/main.dart">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="174">
-              <caret line="134" column="32" selection-start-line="134" selection-start-column="32" selection-end-line="134" selection-end-column="32" />
-              <folding>
-                <element signature="e#0#39#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/ios/Classes/IdentityServerPlugin.h">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="68">
-              <caret line="4" selection-start-line="4" selection-end-line="4" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/ios/Classes/IdentityServerPlugin.m">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="34">
-              <caret line="2" selection-start-line="2" selection-end-line="2" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/ios/identity_server.podspec">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="289">
-              <caret line="17" column="2" selection-start-line="17" selection-start-column="2" selection-end-line="17" selection-end-column="2" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/lib/src/webview/AppWebView.dart">
-          <provider selected="true" editor-type-id="text-editor" />
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/lib/src/webview/WebViewRequestDetails.dart">
-          <provider selected="true" editor-type-id="text-editor">
-            <state>
-              <caret column="47" selection-start-column="47" selection-end-column="47" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/lib/src/common_request_details.dart">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="51">
-              <caret line="3" column="47" selection-start-line="3" selection-start-column="47" selection-end-line="3" selection-end-column="47" />
-              <folding>
-                <element signature="e#0#50#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/lib/src/flutter_appauth.dart">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="644">
-              <caret line="78" column="2" selection-start-line="78" selection-end-line="90" selection-end-column="5" />
-              <folding>
-                <element signature="e#0#39#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/android/src/main/java/com/zellar/identity_server/IdentityServerPlugin.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="448">
-              <caret line="107" column="98" selection-start-line="107" selection-start-column="80" selection-end-line="107" selection-end-column="116" />
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://C:/src/flutter/packages/flutter/lib/src/services/platform_channel.dart">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="5610">
-              <caret line="340" column="68" selection-start-line="340" selection-start-column="68" selection-end-line="340" selection-end-column="68" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-    </leaf>
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -194,6 +41,11 @@
     </findStrings>
   </component>
   <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="master" />
+      </map>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="IdeDocumentHistory">
@@ -230,6 +82,7 @@
     <option name="width" value="977" />
     <option name="height" value="1038" />
   </component>
+  <component name="ProjectId" id="2D7q8YblxXRgosJdvIBul7eOara" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
     <ConfirmationsSetting value="2" id="Add" />
   </component>
@@ -294,9 +147,16 @@
       </pane>
     </panes>
   </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
   <component name="PropertiesComponent">
+    <property name="RunOnceActivity.cidr.known.project.marker" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
+    <property name="cidr.known.project.marker" value="true" />
     <property name="dart.analysis.tool.window.force.activate" value="false" />
+    <property name="dart.analysis.tool.window.visible" value="false" />
     <property name="io.flutter.reload.alreadyRun" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="settings.editor.selected.configurable" value="flutter.settings" />
@@ -312,18 +172,7 @@
       <recent name="E:\Meus Projetos\identity_server\lib\src\webview" />
     </key>
   </component>
-  <component name="RunDashboard">
-    <option name="ruleStates">
-      <list>
-        <RuleState>
-          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
-        </RuleState>
-        <RuleState>
-          <option name="name" value="StatusDashboardGroupingRule" />
-        </RuleState>
-      </list>
-    </option>
-  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="SvnConfiguration">
     <configuration />
   </component>
@@ -380,27 +229,23 @@
       <window_info anchor="right" id="Preview" order="7" />
     </layout>
   </component>
+  <component name="Vcs.Log.History.Properties">
+    <option name="SHOW_DETAILS" value="true" />
+    <option name="COLUMN_ID_ORDER">
+      <list>
+        <option value="Default.Root" />
+        <option value="Default.Author" />
+        <option value="Default.Date" />
+        <option value="Default.Subject" />
+      </list>
+    </option>
+  </component>
   <component name="Vcs.Log.Tabs.Properties">
     <option name="TAB_STATES">
       <map>
         <entry key="MAIN">
           <value>
-            <State>
-              <option name="RECENTLY_FILTERED_USER_GROUPS">
-                <collection />
-              </option>
-              <option name="RECENTLY_FILTERED_BRANCH_GROUPS">
-                <collection />
-              </option>
-              <option name="COLUMN_ORDER">
-                <list>
-                  <option value="0" />
-                  <option value="1" />
-                  <option value="2" />
-                  <option value="3" />
-                </list>
-              </option>
-            </State>
+            <State />
           </value>
         </entry>
       </map>
@@ -419,6 +264,7 @@
         </entry>
       </map>
     </option>
+    <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
